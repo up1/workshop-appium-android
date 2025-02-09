@@ -19,7 +19,9 @@ import com.demo.mylogin.ui.screens.NavigationRoutes
 import com.demo.mylogin.ui.screens.authenticatedGraph
 import com.demo.mylogin.ui.screens.unauthenticatedGraph
 import com.demo.mylogin.ui.theme.ComposeLoginTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

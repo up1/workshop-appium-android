@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.demo.mylogin.R
 import com.demo.mylogin.ui.common.customComposableViews.SmallClickableWithIconAndText
@@ -28,7 +29,7 @@ import com.demo.mylogin.ui.theme.ComposeLoginTheme
 
 @Composable
 fun RegistrationScreen(
-    registrationViewModel: RegistrationViewModel = viewModel(),
+    registrationViewModel: RegistrationViewModel = hiltViewModel(),
     onNavigateBack: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit
 ) {

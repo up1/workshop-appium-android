@@ -1,5 +1,6 @@
 package com.demo.mylogin.ui.screens.unauthenticated.login
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,9 +13,11 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -33,13 +37,16 @@ import coil.size.Scale
 import com.demo.mylogin.R
 import com.demo.mylogin.ui.common.customComposableViews.MediumTitleText
 import com.demo.mylogin.ui.common.customComposableViews.TitleText
+import com.demo.mylogin.ui.screens.unauthenticated.login.state.LoginErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.LoginUiEvent
+import com.demo.mylogin.ui.screens.unauthenticated.login.state.loginErrorState
 import com.demo.mylogin.ui.theme.AppTheme
 import com.demo.mylogin.ui.theme.ComposeLoginTheme
+import kotlin.math.log
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = viewModel(),
+    loginViewModel: LoginViewModel = hiltViewModel(),
     onNavigateToRegistration: () -> Unit,
     onNavigateToForgotPassword: () -> Unit,
     onNavigateToAuthenticatedRoute: () -> Unit
@@ -58,6 +65,23 @@ fun LoginScreen(
             onNavigateToAuthenticatedRoute.invoke()
         }
     } else {
+        if (loginState.errorState.loginErrorState.hasError) {
+            AlertDialog(
+                onDismissRequest = {
+                },
+                title = { Text("Error") },
+                text = { Text(stringResource(loginState.errorState.loginErrorState.errorMessageStringResource)) },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            loginViewModel.onUiEvent(LoginUiEvent.ErrorDismissed)
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
+        }
 
         // Full Screen Content
         Column(

@@ -2,17 +2,25 @@ package com.demo.mylogin.ui.screens.unauthenticated.login
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.demo.mylogin.data.remote.LoginRequest
+import com.demo.mylogin.repository.Resource
+import com.demo.mylogin.repository.UserRepository
 import com.demo.mylogin.ui.common.state.ErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.LoginErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.LoginState
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.LoginUiEvent
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.emailOrMobileEmptyErrorState
+import com.demo.mylogin.ui.screens.unauthenticated.login.state.loginErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.login.state.passwordEmptyErrorState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-/**
- * ViewModel for Login Screen
- */
-class LoginViewModel : ViewModel() {
+@HiltViewModel
+class LoginViewModel @Inject constructor(
+    private val userRepository: UserRepository
+) : ViewModel() {
 
     var loginState = mutableStateOf(LoginState())
         private set
@@ -54,9 +62,29 @@ class LoginViewModel : ViewModel() {
                 val inputsValidated = validateInputs()
                 if (inputsValidated) {
                     // TODO Trigger login in authentication flow
-                    loginState.value = loginState.value.copy(isLoginSuccessful = true)
+                    val request =
+                        LoginRequest(loginState.value.emailOrMobile, loginState.value.password);
+                    viewModelScope.launch {
+                        login(request);
+                    }
                 }
             }
+
+            is LoginUiEvent.ErrorDismissed -> {
+                loginState.value = loginState.value.copy(
+                    errorState = LoginErrorState())
+            }
+        }
+    }
+
+    suspend fun login(request: LoginRequest) {
+        val result = userRepository.login(request);
+        if (result is Resource.Success) {
+            loginState.value = loginState.value.copy(isLoginSuccessful = true)
+        } else {
+            loginState.value = loginState.value.copy(
+                isLoginSuccessful = false,
+                errorState = loginState.value.errorState.copy(loginErrorState = loginErrorState) )
         }
     }
 

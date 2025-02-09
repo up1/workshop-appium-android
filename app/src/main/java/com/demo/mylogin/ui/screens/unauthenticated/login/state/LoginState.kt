@@ -18,5 +18,6 @@ data class LoginState(
  */
 data class LoginErrorState(
     val emailOrMobileErrorState: ErrorState = ErrorState(),
-    val passwordErrorState: ErrorState = ErrorState()
+    val passwordErrorState: ErrorState = ErrorState(),
+    val loginErrorState: ErrorState = ErrorState()
 )

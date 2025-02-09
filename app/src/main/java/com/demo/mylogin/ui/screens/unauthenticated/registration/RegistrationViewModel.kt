@@ -2,6 +2,7 @@ package com.demo.mylogin.ui.screens.unauthenticated.registration
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.demo.mylogin.repository.UserRepository
 import com.demo.mylogin.ui.common.state.ErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.registration.state.RegistrationErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.registration.state.RegistrationState
@@ -11,8 +12,13 @@ import com.demo.mylogin.ui.screens.unauthenticated.registration.state.emailEmpty
 import com.demo.mylogin.ui.screens.unauthenticated.registration.state.mobileNumberEmptyErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.registration.state.passwordEmptyErrorState
 import com.demo.mylogin.ui.screens.unauthenticated.registration.state.passwordMismatchErrorState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class RegistrationViewModel : ViewModel() {
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(
+    private val userRespository: UserRepository
+) : ViewModel() {
 
     var registrationState = mutableStateOf(RegistrationState())
         private set

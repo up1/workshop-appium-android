@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -28,10 +31,16 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainApp() {
     Surface(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics {
+                testTagsAsResourceId = true
+            }
+        ,
         color = MaterialTheme.colorScheme.background
     ) {
         MainAppNavHost()
@@ -39,13 +48,16 @@ fun MainApp() {
 
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun MainAppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
 ) {
     NavHost(
-        modifier = modifier,
+        modifier = modifier.semantics {
+            testTagsAsResourceId = true
+        },
         navController = navController,
         startDestination = NavigationRoutes.Unauthenticated.NavigationRoute.route
     ) {

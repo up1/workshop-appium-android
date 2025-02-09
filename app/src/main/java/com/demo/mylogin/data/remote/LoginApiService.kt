@@ -36,7 +36,7 @@ class LoginApiService {
             .build()
 
         return Retrofit.Builder()
-            .baseUrl("https://jsonplaceholder.typicode.com/")
+            .baseUrl("https://4396b28a-4eaa-4300-953f-766c78c8bece.mock.pstmn.io/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
